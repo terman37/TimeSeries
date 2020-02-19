@@ -12,7 +12,6 @@ plot(t,x,type='l',xlim=c(1,120),ylim=c(1,80),xlab='time',
      ylab='')
 lines(newt$t,p,col=2)
 
-
 # change of trend (linear model not adapted because same weight for all datas)
 data=read.table(file="http://eric.univ-lyon2.fr/~jjacques/Download/DataSet/serie2.txt")
 plot(data$V1,type='l',xlim=c(1,120),ylim=c(1,80),xlab='time',ylab='')
@@ -24,3 +23,4 @@ p=predict(model,newt)
 plot(t,x,type='l',xlim=c(1,120),ylim=c(1,80),xlab='time',
      ylab='')
 lines(newt$t,p,col=2)
+
