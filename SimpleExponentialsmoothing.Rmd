@@ -104,7 +104,7 @@ autolayer(HOLT2,series='Damped HW',PI=FALSE)
 ```
 
 
-# Sheep in Asia Dataset
+# Nb of Sheeps in Asia Dataset
 ```{r}
 data(livestock)
 autoplot(livestock) +
@@ -135,5 +135,41 @@ autoplot(livestock) +
 autolayer(HWd) +
 xlab("year") +
 ylab("Sheep in Asia (millions)")
+
+```
+
+
+
+### Compare RMSE for models
+
+Split in Train Test
+
+```{r}
+train = window(livestock,end=1998)
+test = window(livestock,start=c(1998,1))
+```
+
+
+```{r}
+SES=ses(train,h=10)
+# SES=HoltWinters(train,alpha=NULL,beta=FALSE,gamma=FALSE)
+round(accuracy(SES,test),2)
+autoplot(SES)+
+  autolayer(test)
+
+```
+
+```{r}
+HOLT=holt(train,h=10)
+round(accuracy(HOLT,test),2)
+autoplot(train) + autolayer(HOLT,series='fitted',PI=FALSE) + 
+  autolayer(test)
+```
+
+```{r}
+HOLT=holt(train,damped=TRUE, h=10)
+round(accuracy(HOLT,test),2)
+autoplot(train) + autolayer(HOLT,series='fitted',PI=FALSE)+ 
+  autolayer(test)
 ```
 
