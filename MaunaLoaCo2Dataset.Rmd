@@ -1,0 +1,63 @@
+---
+title: "DataSet CO2 concentrations near Mauna Loa volcano from 1959 to 1997"
+output: html_notebook
+---
+
+Libraries
+```{r}
+library(forecast)
+
+```
+
+Loading dataset
+```{r}
+data(co2)
+autoplot(co2)
+```
+
+Create Train/Test sets
+```{r}
+co2_train = window(co2,end=c(1989,12))
+co2_test = window(co2,start=c(1990,1))
+
+head(co2_test)
+tail(co2_test)
+```
+
+Looks like additive model will be the best
+```{r}
+
+fit1=hw(co2_train,seasonal='additive',h=8*12)
+
+LES=HoltWinters(co2_train,alpha=NULL,beta=NULL,gamma=NULL)
+p<-predict(LES,n.ahead=96)
+
+```
+
+Plot results
+```{r}
+autoplot(co2_train) +
+  autolayer(p,series='p.') + 
+  autolayer(fit1,series='fit1.',PI=FALSE) +
+  autolayer(co2_test,series='test') + 
+  xlim(1988,1998) + ylim(345,370)
+```
+
+Check RMSE
+```{r}
+print(sqrt(mean((fit1$mean-co2_test)^2)))
+print(sqrt(mean((p-co2_test)^2)))
+
+```
+
+Train on complete dataset and predict next 10 years
+```{r}
+LES=HoltWinters(co2,alpha=NULL,beta=NULL,gamma=NULL)
+p<-predict(LES,n.ahead=10*12)
+```
+Plot results
+```{r}
+autoplot(co2) +
+  autolayer(p,series='predictions.') + 
+  xlim(1988,2008) + ylim(345,385)
+```
