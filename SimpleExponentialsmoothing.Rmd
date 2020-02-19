@@ -3,12 +3,11 @@ title: "Simple Exponential smoothing"
 output: html_notebook
 ---
 
-Simple Exponential smoothing forecast by a constant
-
 
 Libraries
 ```{r}
 library(forecast)
+library(fpp)
 ```
 
 Import dataset
@@ -24,7 +23,8 @@ head(varicelle,12)
 tail(varicelle,6)
 ```
 
-Simple Exponential Smoothing (SES)
+### Simple Exponential Smoothing (SES)
+Forecasting is done with a constant
 ```{r}
 data=read.table(file="http://eric.univ-lyon2.fr/~jjacques/Download/DataSet/serie2.txt")
 serie=ts(data)
@@ -76,14 +76,64 @@ autoplot(SES)
 ```
 
 
+### Non seasonal Holt-Winters smoothing
+Forecasting is done with the linear trend
+```{r}
+LES=HoltWinters(serie,alpha=NULL,beta=NULL,gamma=FALSE)
+plot(serie,xlim=c(1,120),ylim=c(0,60))
+p<-predict(LES,n.ahead=20)
+lines(p,col=2)
+```
 
 
+On varicelle dataset
+```{r}
+HOLT=holt(vari_train,h=20)
+round(accuracy(HOLT),2)
+autoplot(vari_train) + autolayer(HOLT,series='fitted',PI=FALSE)
+```
 
 
+Damped non seasonal Holt-Winters smoothing
+```{r}
+HOLT1=holt(vari_train,h=20)
+HOLT2=holt(vari_train,damped=TRUE,phi=0.9,h=50)
+autoplot(vari_train) +
+autolayer(HOLT1,series='HW',PI=FALSE) +
+autolayer(HOLT2,series='Damped HW',PI=FALSE)
+```
 
 
+# Sheep in Asia Dataset
+```{r}
+data(livestock)
+autoplot(livestock) +
+xlab("year") +
+ylab("Sheep in Asia (millions)")
+```
+
+```{r}
+e1 <- tsCV(livestock, ses, h=1)
+e2 <- tsCV(livestock, holt, h=1)
+e3 <- tsCV(livestock, holt, damped=TRUE, h=1)
+```
 
 
+```{r}
+mean(e1^2, na.rm=TRUE)
+mean(e2^2, na.rm=TRUE)
+mean(e3^2, na.rm=TRUE)
+```
 
+```{r}
+HWd=holt(livestock,damped=TRUE,h=12)
+HWd[["model"]]
+```
 
+```{r}
+autoplot(livestock) +
+autolayer(HWd) +
+xlab("year") +
+ylab("Sheep in Asia (millions)")
+```
 
