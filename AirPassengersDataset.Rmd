@@ -1,0 +1,48 @@
+---
+title: "DataSet Airpassengers from 1949 to 1960"
+output: html_notebook
+---
+
+Libraries
+```{r}
+library(forecast)
+library(ggplot2)
+```
+
+Loading dataset
+```{r}
+data(AirPassengers)
+autoplot(AirPassengers)
+```
+
+
+```{r}
+autoplot(decompose(AirPassengers,type="multiplicative"))+xlab('Year')
+```
+
+```{r}
+autoplot(AirPassengers)
+length(AirPassengers)
+```
+
+remove seasonal pattern
+```{r}
+res1 = diff(AirPassengers,lag=12,differences=1)
+autoplot(res1)
+length(res1)
+```
+
+still a slight trend, apply diff again 
+Rem: no need for lag=12, no seasonal pattern, allow to keep more points
+```{r}
+res2 = diff(res1,lag=1)
+autoplot(res2)
+length(res2)
+```
+
+Check if white noise
+p-value small (<0.05) --> HO rejected --> not white noise
+```{r}
+Box.test(res2,lag=10,type="Ljung-Box")
+```
+
