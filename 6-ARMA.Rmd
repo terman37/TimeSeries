@@ -2,3 +2,28 @@
 title: "ARMA Models"
 output: html_notebook
 ---
+
+Autoregressive models ARp
+
+example 1
+AutoRegressive model of order 1
+AR1 (xt = -0.8xt−1 + Et)
+```{r}
+par(mfrow=c(3,1))
+modele<-list(ar=c(0.8))
+ar1<-arima.sim(modele,1000)
+plot.ts(ar1)
+acf(ar1) # exponentialy decrease to 0
+pacf(ar1) # order 1 != 0, next orders = 0
+```
+
+AutoRegressive model of order 2
+```{r}
+par(mfrow=c(3,1))
+modele<-list(ma=c(0.8))
+ma1<-arima.sim(modele,1000)
+plot.ts(ma1)
+acf(ma1)
+pacf(ma1)
+```
+
