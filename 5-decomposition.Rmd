@@ -1,0 +1,23 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Moving average
+```{r}
+autoplot(co2, series="Data") +
+  autolayer(ma(co2,6), series="6-MA") +
+  autolayer(ma(co2,12), series="12-MA") +
+  xlab("Year") + ylab("CO2 concentration") +
+  ggtitle("Atmospheric concentrations of CO2 ") +
+  scale_colour_manual(values=c("Data"="grey50","6-MA"="red","12-MA"="blue"),breaks=c("Data","6-MA","12-MA"))
+```
+
+Decomposition
+```{r}
+autoplot(decompose(co2,type="additive"))+xlab('Year')
+```
+
+
+
+
