@@ -3,6 +3,8 @@ title: "ARMA Models"
 output: html_notebook
 ---
 
+Models for the residuals.
+
 Autoregressive models ARp
 
 example 1
@@ -17,13 +19,19 @@ acf(ar1) # exponentialy decrease to 0
 pacf(ar1) # order 1 != 0, next orders = 0
 ```
 
-AutoRegressive model of order 2
+Moving average models MAq
+
+example 1
+
 ```{r}
 par(mfrow=c(3,1))
 modele<-list(ma=c(0.8))
-ma1<-arima.sim(modele,1000)
+ma1<-arima.sim(modele,2000)
 plot.ts(ma1)
-acf(ma1)
-pacf(ma1)
+acf(ma1) # order 1 != 0, next orders = 0
+pacf(ma1) # exponentialy decrease to 0
 ```
+
+
+
 
