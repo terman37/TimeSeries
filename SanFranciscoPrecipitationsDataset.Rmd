@@ -1,0 +1,90 @@
+---
+title: "DataSet San Francisco precipitation from 1932 to 1966"
+output: html_notebook
+---
+
+Libraries
+```{r}
+library(forecast)
+library(ggplot2)
+```
+
+Loading dataset
+```{r}
+data=scan(file="http://eric.univ-lyon2.fr/~jjacques/Download/DataSet/sanfran.dat",skip=1)
+sf<-ts(data,start=c(1932,1),end=c(1966,12),freq=12)
+autoplot(sf)
+
+```
+
+```{r}
+ggseasonplot(sf,year.labels= TRUE,year.labels.left=TRUE)
+```
+
+```{r}
+ggseasonplot(sf,polar=TRUE)
+```
+
+
+
+Create Train/Test sets
+```{r}
+train = window(sf,end=c(1963,12))
+test = window(sf,start=c(1964,1))
+
+head(train,12)
+tail(train,12)
+```
+
+```{r}
+
+tmp=acf(sf,type="cor",plot = FALSE)
+plot(tmp)
+
+```
+
+
+
+Looks like additive model will be the best
+```{r}
+
+fit1=hw(train,seasonal='additive',h=3*12)
+fit3=hw(train,seasonal='additive',h=3*12,damped=TRUE)
+
+# LES=HoltWinters(train,alpha=NULL,beta=NULL,gamma=NULL)
+# p<-predict(LES,n.ahead=3*12)
+
+```
+
+Plot results
+```{r}
+autoplot(train) +
+  autolayer(fit1,series='add - no damping',PI=FALSE) +
+  autolayer(fit3,series='add - with damping',PI=FALSE) +
+
+  autolayer(test,series='test')   + 
+  coord_cartesian(xlim = c(1962, 1967))
+  
+```
+
+Check RMSE
+```{r}
+print(sqrt(mean((fit1$mean-test)^2)))
+
+print(sqrt(mean((fit3$mean-test)^2)))
+
+```
+
+Compare parameters with and without damping
+phi = .97 (close to 1 so almost no damping effect)
+```{r}
+fit1$model$par[1:3]
+
+fit3$model$par[1:4]
+
+```
+
+
+
+
+
