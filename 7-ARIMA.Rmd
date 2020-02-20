@@ -65,11 +65,67 @@ fit=Arima(uschange[,"Consumption"],order=c(3,0,0))
 autoplot(forecast(fit,h=10))
 ```
 
+
+Another Serie : INCOME
 ```{r}
+autoplot(uschange[,"Income"])
+```
+
+```{r}
+ggAcf(uschange[,"Income"])
+```
+
+```{r}
+ggPacf(uschange[,"Income"])
+```
+
+```{r}
+btest = Box.test(uschange[,"Income"],lag=10,type="Ljung-Box")
+
+btest$p.value
+```
+--> p-value > 0.05 - do not reject H0 --> serie can be considered as white noise.
+
+--> nothing to predict
+
+
+Another Serie : UNEMPLOYMENT
+
+```{r}
+mydata = uschange[,"Unemployment"]
+# mydata = uschange[,"Savings"]
+autoplot(mydata)
+```
+
+```{r}
+ggAcf(mydata)
 
 ```
 
+```{r}
+ggPacf(mydata)
+```
 
+
+```{r}
+fit = Arima(mydata,order=c(0,0,11))
+fit2 = Arima(mydata,order=c(8,0,0)) # model proposed by teacher
+fit3 = Arima(mydata,order=c(3,0,2)) # model proposed by nice
+fit
+```
+
+```{r}
+checkresiduals(fit)
+```
+
+
+
+```{r}
+autoplot(forecast(fit,h=3*4+1),PI=FALSE) +
+  autolayer(forecast(fit2,h=3*4+1),PI=FALSE) + 
+  autolayer(forecast(fit3,h=3*4+1),PI=FALSE) +
+  coord_cartesian(xlim = c(1970, 2020))
+```
 
 
 
