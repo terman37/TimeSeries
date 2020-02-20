@@ -18,6 +18,17 @@ Decomposition
 autoplot(decompose(co2,type="additive"))+xlab('Year')
 ```
 
+Apply lag operator (differencing)
+```{r}
+par(mfrow=c(2,1))
+plot(co2)
+plot(diff(co2,differences=1))
+```
 
-
+No trend / no seasonal pattern
+```{r}
+par(mfrow=c(2,1))
+plot(co2)
+plot(diff(co2,lag=12,differences=1))
+```
 
