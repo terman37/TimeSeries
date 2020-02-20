@@ -34,15 +34,40 @@ Arima(uschange[,"Consumption"],order=c(2,0,2))
 auto.arima(uschange[,"Consumption"])
 ```
 
+to obtain a good forecast and an understanding of the model
+- let’s start by differencing the series if needed, in order to obtain something visually stationary
+- look at the ACF and PACF plot ot identify possible models
+- take eventually into account knowledge on the series (knwon autocorrelation. . . )
+- estimate models and select the best one by AICc / AIC / BIC
+
+
+```{r}
+ggAcf(uschange[,"Consumption"])
+```
+
+```{r}
+ggPacf(uschange[,"Consumption"])
+```
+
+May be an AR3 or an MA3
+
+```{r}
+Arima(uschange[,"Consumption"],order=c(3,0,0))
+```
+
+```{r}
+Arima(uschange[,"Consumption"],order=c(0,0,3))
+```
+
+Predict
+```{r}
+fit=Arima(uschange[,"Consumption"],order=c(3,0,0))
+autoplot(forecast(fit,h=10))
+```
+
 ```{r}
 
 ```
-
-
-
-
-
-
 
 
 
