@@ -40,9 +40,17 @@ autoplot(res2)
 length(res2)
 ```
 
+check autocorrelation
+acf of order 1 ~ -0.3 --> still correlation between xt and xt-1
+```{r}
+acf(res2)
+```
+
+Confirm with box test:
 Check if white noise
 p-value small (<0.05) --> HO rejected --> not white noise
 ```{r}
-Box.test(res2,lag=10,type="Ljung-Box")
+Box.test(res2,lag=10,type="Ljung-Box")$p.value
 ```
 
+--> some autocorrelation to modelize.
