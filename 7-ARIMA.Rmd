@@ -24,6 +24,10 @@ library(fpp2)
 ```{r}
 autoplot(uschange[,"Consumption"]) +
 xlab("Year") + ylab("Quarterly percentage change")
+
+```
+```{r}
+
 ```
 
 ```{r}
