@@ -85,6 +85,67 @@ fit3$model$par[1:4]
 ```
 
 
+************************
+Using SARIMA
+
+
+```{r}
+train = window(sf,end=c(1963,12))
+test = window(sf,start=c(1964,1))
+```
+
+```{r}
+autoplot(decompose(train))
+```
+
+
+```{r}
+train %>% diff(lag=12) %>% ggtsdisplay()
+```
+
+
+```{r}
+fit4=Arima(train, order=c(0,1,1), seasonal=c(0,1,1))
+fit4
+fit4 %>% checkresiduals()
+```
+
+```{r}
+p = forecast(fit4,h=36)
+autoplot(train) +
+  autolayer(fit1,series='add - no damping',PI=FALSE) +
+  autolayer(fit3,series='add - with damping',PI=FALSE) +
+  autolayer(p,series='SARIMA',PI=FALSE) +
+  autolayer(test,series='test')   + 
+  coord_cartesian(xlim = c(1962, 1967))
+```
+
+RMSE compared
+```{r}
+print(sqrt(mean((fit1$mean-test)^2)))
+print(sqrt(mean((fit3$mean-test)^2)))
+print(sqrt(mean((p$mean-test)^2)))
+
+```
+
+SARIMA model not better than SES in this case
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
