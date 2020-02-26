@@ -105,7 +105,7 @@ train %>% diff(lag=12) %>% ggtsdisplay()
 
 
 ```{r}
-fit4=Arima(train, order=c(0,1,1), seasonal=c(0,1,1))
+fit4=Arima(train, order=c(0,0,3), seasonal=c(0,1,1))
 fit4
 fit4 %>% checkresiduals()
 ```
