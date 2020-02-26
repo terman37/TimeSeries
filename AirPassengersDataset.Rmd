@@ -82,7 +82,7 @@ l_train %>% diff(lag=12) %>% diff() %>% ggtsdisplay()
 ```
 
 ```{r}
-fit1=Arima(l_train, order=c(0,1,2), seasonal=c(0,1,1))
+fit1=Arima(l_train, order=c(0,1,3), seasonal=c(0,1,1))
 summary(fit1)
 fit1 %>% checkresiduals()
 fit1 %>% residuals() %>% ggtsdisplay()
@@ -111,7 +111,7 @@ autoplot(train) +
 
 
 ```{r}
-fit2=Arima(train, order=c(0,1,2), seasonal=c(0,1,1),lambda = 'auto')
+fit2=Arima(train, order=c(0,1,3), seasonal=c(0,1,1),lambda = 'auto')
 summary(fit2)
 ```
 
@@ -126,7 +126,7 @@ autoplot(train) +
 ```{r}
 fit3 = hw(train,h=24,lambda='auto')
 fit4 = hw(train,h=24,seasonal = 'multiplicative')
-fit5=auto.arima(train,lambda = 'auto')
+fit5 = auto.arima(train,lambda = 'auto')
 ```
 
 ```{r}
