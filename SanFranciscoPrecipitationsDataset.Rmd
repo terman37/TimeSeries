@@ -122,16 +122,55 @@ autoplot(train) +
 
 RMSE compared
 ```{r}
+print('HW RMSE')
 print(sqrt(mean((fit1$mean-test)^2)))
+
+print('HW with Damping RMSE')
 print(sqrt(mean((fit3$mean-test)^2)))
+
+print('SARIMA RMSE')
 print(sqrt(mean((p$mean-test)^2)))
 
 ```
 
 SARIMA model not better than SES in this case
 
+******************************************************************
+
+USING NEURAL NETWORKS
+
+```{r}
+fit5 = nnetar(data)
+print(fit5)
+```
 
 
+```{r}
+p5 = forecast(fit5,h=36)
+autoplot(train) +
+  autolayer(fit1,series='add - no damping',PI=FALSE) +
+  autolayer(fit3,series='add - with damping',PI=FALSE) +
+  autolayer(p,series='SARIMA',PI=FALSE) +
+  autolayer(p5,series='NNET') +
+  autolayer(test,series='test')   + 
+  coord_cartesian(xlim = c(1962, 1967))
+
+
+```
+
+```{r}
+print('HW RMSE')
+print(sqrt(mean((fit1$mean-test)^2)))
+
+print('HW with Damping RMSE')
+print(sqrt(mean((fit3$mean-test)^2)))
+
+print('SARIMA RMSE')
+print(sqrt(mean((p$mean-test)^2)))
+
+print('NNET RMSE')
+print(sqrt(mean((p5$mean-test)^2)))
+```
 
 
 
