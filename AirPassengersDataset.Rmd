@@ -84,13 +84,13 @@ l_train %>% diff(lag=12) %>% diff() %>% ggtsdisplay()
 ```{r}
 fit1=Arima(l_train, order=c(0,1,2), seasonal=c(0,1,1))
 summary(fit1)
-# fit1 %>% checkresiduals()
+fit1 %>% checkresiduals()
 fit1 %>% residuals() %>% ggtsdisplay()
 ```
 
 ```{r}
 autoplot(l_train) +
-  autolayer(forecast(fit1,h=24),PI=FALSE,series='log arima') + 
+  autolayer(forecast(fit1,h=24),PI=FALSE,series='log SARIMA') + 
   autolayer(l_test,series = 'log test') + 
   coord_cartesian(xlim = c(1958,1961))
 ```
@@ -102,9 +102,8 @@ forecast_inv = InvBoxCox(p$mean,lambda)
 
 autoplot(train) +
   autolayer(test,series = 'Test') + 
-  autolayer(forecast_inv,series = 'Sarima', PI=FALSE) + 
+  autolayer(forecast_inv,series = 'SARIMA', PI=FALSE) + 
   coord_cartesian(xlim = c(1958,1961))
-
 
 ```
 
@@ -119,29 +118,42 @@ summary(fit2)
 ```{r}
 autoplot(train) +
   autolayer(test,series = 'Test') + 
-  autolayer(forecast(fit2,h=24),series = 'Sarima', PI=FALSE) + 
+  autolayer(forecast(fit2,h=24),series = 'SARIMA', PI=FALSE) + 
   coord_cartesian(xlim = c(1958,1961))
 ```
 
 
 ```{r}
 fit3 = hw(train,h=24,lambda='auto')
+fit4 = hw(train,h=24,seasonal = 'multiplicative')
+fit5=auto.arima(train,lambda = 'auto')
 ```
 
 ```{r}
 autoplot(train) +
   autolayer(test,series = 'Test') + 
-  autolayer(forecast(fit2,h=24),series = 'Sarima', PI=FALSE) +
-  autolayer(fit3$mean,series = 'HW') +
+  autolayer(forecast(fit2,h=24),series = 'SARIMA BoxCox', PI=FALSE) +
+  autolayer(forecast(fit5,h=24),series = 'SARIMA Auto', PI=FALSE) +
+  autolayer(fit3$mean,series = 'HW BoxCox') +
+  autolayer(fit4$mean,series = 'HW multiplicative') +
   coord_cartesian(xlim = c(1958, 1961))
 ```
 
 ```{r}
-p = forecast(fit2,h=24)
-print('Sarima RMSE')
-print(sqrt(mean((p$mean-test)^2)))
-print('HW RMSE')
+
+print('HW multiplicative RMSE')
+print(sqrt(mean((fit4$mean-test)^2)))
+
+print('HW BoxCox RMSE')
 print(sqrt(mean((fit3$mean-test)^2)))
+
+p = forecast(fit5,h=24)
+print('SARIMA Auto RMSE')
+print(sqrt(mean((p$mean-test)^2)))
+
+p = forecast(fit2,h=24)
+print('SARIMA BoxCox RMSE')
+print(sqrt(mean((p$mean-test)^2)))
 
 ```
 

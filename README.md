@@ -1,5 +1,10 @@
-# TimeSeries
+# Time Series
 
 - R time series object manipulation
 - Simple Exponential Smoothing
-- Holt winters forecasting (with and without damping)
+- Holt Winters forecasting (with and without damping)
+- Seasonal Holt Winters
+- ARMA models
+- ARIMA models
+- Seasonal ARIMA models (SARIMA)
+- Heteroscedastic series

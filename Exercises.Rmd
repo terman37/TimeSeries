@@ -72,6 +72,7 @@ autoplot(forecast(fit1,h=3*4+1),PI=FALSE) +
   coord_cartesian(xlim = c(1970, 2020))
 ```
 
+************************************************************************************************
 EXAMPLE 2:
 closing stock prices of GOOG from the NASDAQ exchange, for 1000 consecutive
 trading days between 25 February 2013 and 13 February 2017
