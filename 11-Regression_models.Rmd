@@ -1,0 +1,16 @@
+---
+title: "TIME SERIES REGRESSION MODELS"
+output: html_notebook
+---
+
+Explain ts according to external features
+
+```{r}
+library(forecast)
+```
+
+```{r}
+library(fpp2)
+autoplot(uschange)
+```
+
