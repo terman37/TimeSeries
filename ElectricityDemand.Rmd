@@ -1,0 +1,83 @@
+---
+title: "ELECTRICITY DEMAND"
+output: html_notebook
+---
+
+
+```{r}
+library(forecast)
+```
+
+```{r}
+data = elecdaily
+
+train = head(data,358)
+test = tail(data,n=7)
+```
+
+
+```{r}
+autoplot(data)
+```
+
+remove the effect of covariates
+```{r}
+fit = tslm(Demand~Temperature+trend,data=train)
+summary(fit)
+res = residuals(fit)
+```
+
+```{r}
+ggtsdisplay(res)
+```
+
+```{r}
+
+res %>% BoxCox(lambda = 'auto') %>% diff(lag=7) %>% diff() %>% ggtsdisplay()
+
+```
+
+```{r}
+
+fit_ar = Arima(train[,'Demand'], xreg = train[,3],order = c(0,1,2),seasonal = c(0,1,1),lambda = 'auto')
+summary(fit_ar)
+fit_ar %>% residuals() %>% ggtsdisplay()
+```
+
+```{r}
+checkresiduals(fit_ar,plot=FALSE)
+```
+
+```{r}
+p = forecast(fit_ar,h=7,xreg=test[,3])
+autoplot(train[,'Demand']) + 
+  autolayer(test[,'Demand'],series = 'Test') +
+  autolayer(p,series='ARIMA',PI=FALSE) + 
+  coord_cartesian(xlim = c(50,54),ylim = c(160,250))
+```
+
+```{r}
+print("RMSE BC SARIMA (0,1,2)(0,1,1) xreg = Temperature")
+RMSE = sqrt(mean((p$mean-test[,"Demand"])^2))
+print(RMSE)
+```
+
+```{r}
+fit_nnet = nnetar(train[,'Demand'], xreg = train[,3])
+fit_nnet
+```
+
+```{r}
+pnnet = forecast(fit_nnet,h=7,xreg=test[,3])
+autoplot(train[,'Demand']) + 
+  autolayer(test[,'Demand'],series = 'Test') +
+  autolayer(pnnet,series='NNET',PI=FALSE) + 
+  coord_cartesian(xlim = c(50,54))
+```
+
+```{r}
+print("RMSE")
+RMSE = sqrt(mean((pnnet$mean-test[,"Demand"])^2))
+print(RMSE)
+```
+
