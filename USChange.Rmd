@@ -1,0 +1,55 @@
+---
+title: "USChange"
+output: html_notebook
+---
+
+Explain ts according to external features
+
+```{r}
+library(forecast)
+```
+
+```{r}
+library(fpp2)
+data = uschange
+plot(data)
+```
+
+```{r}
+train = window(data,end=c(2015,4))
+test = window(data,start=c(2016,1))
+```
+
+```{r}
+sel = VARselect(train, type = "const")
+var = VAR(train, p=sel$selection[2],type = "const")
+
+```
+
+```{r}
+serial.test(var, type="PT.asymptotic")
+```
+
+
+
+```{r}
+p = forecast(var,h=3)
+```
+
+```{r}
+autoplot(p$forecast$Consumption,PI=FALSE) +
+  autolayer(test[,"Consumption"])+
+  coord_cartesian(xlim = c(2015,2017))
+```
+
+```{r}
+
+sqrt(mean((p$forecast$Consumption$mean-test[,"Consumption"])^2))
+sqrt(mean((p$forecast$Income$mean-test[,"Income"])^2))
+sqrt(mean((p$forecast$Production$mean-test[,"Production"])^2))
+sqrt(mean((p$forecast$Savings$mean-test[,"Savings"])^2))
+sqrt(mean((p$forecast$Unemployment$mean-test[,"Unemployment"])^2))
+```
+
+
+
